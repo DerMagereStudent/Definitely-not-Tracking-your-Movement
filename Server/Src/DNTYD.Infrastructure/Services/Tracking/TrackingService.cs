@@ -71,10 +71,12 @@ public class TrackingService : ITrackingService<string> {
 				Errors = new[] {GetTrackingPointsResponse.Error.Unauthorized}
 			};
 		}
+
+		DateTime minTimeStamp = request.MinTimeStampTracked ?? DateTime.MinValue;
 		
 		return new GetTrackingPointsResponse {
 			Succeeded = true,
-			TrackingPoints = this._dbContext.TrackingPoints.Where(tp => tp.UserId.Equals(user.Id) && tp.TimeStampTracked > request.MinTimeStampTracked),
+			TrackingPoints = this._dbContext.TrackingPoints.Where(tp => tp.UserId.Equals(user.Id) && tp.TimeStampTracked > minTimeStamp),
 			Messages = new[] {GetTrackingPointsResponse.Message.TrackingPointsReturned}
 		};
 	}

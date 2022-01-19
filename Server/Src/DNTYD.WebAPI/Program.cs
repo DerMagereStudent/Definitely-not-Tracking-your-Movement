@@ -8,11 +8,13 @@ using DNTYD.Infrastructure.Database;
 using DNTYD.Infrastructure.Services;
 using DNTYD.Infrastructure.Services.Identity;
 using DNTYD.Infrastructure.Services.Tracking;
+using DNTYD.WebAPI.HostedServices;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace DNTYD.WebAPI;
 
@@ -29,15 +31,42 @@ public static class Program {
 		// Add services to the container.
 		builder.Services.AddControllers();
 		
+		Program.ConfigureCors(builder);
 		Program.ConfigureOptions(builder, out JwtIssuingOptions jwtIssuingOptions);
 		Program.ConfigureScopedServices(builder);
+		builder.Services.AddHostedService<ReverseGeocodingBackgroundService>();
 		Program.ConfigureEntityFramework(builder);
 		Program.ConfigureIdentity(builder);
 		Program.ConfigureJwtAuthentication(builder, jwtIssuingOptions);
 		
 		// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 		builder.Services.AddEndpointsApiExplorer();
-		builder.Services.AddSwaggerGen();
+		builder.Services.AddSwaggerGen(c =>
+		{
+			c.SwaggerDoc("v1", new OpenApiInfo { 
+				Title = "DNTYM API", 
+				Version = "v1" 
+			});
+			c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+				In = ParameterLocation.Header, 
+				Description = "Please insert JWT with Bearer into field",
+				Name = "Authorization",
+				Type = SecuritySchemeType.ApiKey 
+			});
+			c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+				{ 
+					new OpenApiSecurityScheme 
+					{ 
+						Reference = new OpenApiReference 
+						{ 
+							Type = ReferenceType.SecurityScheme,
+							Id = "Bearer" 
+						} 
+					},
+					new string[] { } 
+				} 
+			});
+		});
 	}
 
 	private static void ConfigurePipeline(WebApplication app) {
@@ -49,12 +78,28 @@ public static class Program {
 
 		app.UseHttpsRedirection();
 
+		app.UseCors("AllowAll");
+
+		app.UseAuthentication();
 		app.UseAuthorization();
 
 		app.MapControllers();
 	}
 
 	#region Services
+
+	private static void ConfigureCors(WebApplicationBuilder builder) {
+		builder.Services.AddCors(options => {
+			options.AddPolicy(
+				name: "AllowAll",
+				builder => {
+					builder.WithOrigins("*")
+						.AllowAnyHeader()
+						.AllowAnyMethod();
+				}
+			);
+		});
+	}
 
 	private static void ConfigureOptions(WebApplicationBuilder builder, out JwtIssuingOptions jwtIssuingOptions) {
 		jwtIssuingOptions = new JwtIssuingOptions();

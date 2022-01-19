@@ -36,7 +36,7 @@ public class TrackingController : ControllerBase {
 		try {
 			AddTrackingPointResponse response = await this._trackingService.AddTrackingPointAsync(
 				request,
-				this.Request.Headers[HeaderNames.Authorization]
+				this.Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer", "").Trim()
 			);
 			
 			if (!response.Succeeded && response.Errors.Any(e =>
@@ -61,7 +61,7 @@ public class TrackingController : ControllerBase {
 	}
 
 	[Authorize]
-	[HttpPut]
+	[HttpGet]
 	[Route("positions")]
 	public async Task<IActionResult> GetTrackingPointsAsync([FromQuery] GetTrackingPointsRequest<string> request) {
 		if (!this.ModelState.IsValid) {
@@ -76,7 +76,7 @@ public class TrackingController : ControllerBase {
 		try {
 			GetTrackingPointsResponse response = await this._trackingService.GetTrackingPointsAsync(
 				request,
-				this.Request.Headers[HeaderNames.Authorization]
+				this.Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer", "").Trim()
 			);
 			
 			if (!response.Succeeded && response.Errors.Any(e =>
