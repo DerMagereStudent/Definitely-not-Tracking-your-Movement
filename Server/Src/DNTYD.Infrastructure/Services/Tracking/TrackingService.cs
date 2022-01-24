@@ -42,7 +42,7 @@ public class TrackingService : ITrackingService<string> {
 			UserId = user.Id,
 			Latitude = request.TrackingPoint.Latitude,
 			Longitude = request.TrackingPoint.Longitude,
-			TimeStampTracked = request.TrackingPoint.TimeStampTracked
+			TimeStampTracked = request.TrackingPoint.TimeStampTracked?.ToUniversalTime() ?? DateTime.UtcNow
 		};
 
 		this._dbContext.TrackingPoints.Add(trackingPoint);

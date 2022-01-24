@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Globalization;
+using System.Net;
 
 using DNTYD.Core.Entities;
 using DNTYD.Infrastructure.Database;
@@ -62,7 +63,25 @@ public class ReverseGeocodingBackgroundService : BackgroundService {
 
 	private async Task<string?> GetAddressForTrackingPoint(TrackingPoint point, CancellationToken stoppingToken) {
 		try {
-			HttpWebRequest request = WebRequest.CreateHttp($"https://nominatim.openstreetmap.org/reverse?lat={point.Latitude}&lon={point.Longitude}&format=geojson");
+			this._logger.LogInformation($"Latitude:  {point.Latitude.ToString(CultureInfo.InvariantCulture)}");
+			this._logger.LogInformation($"Longitude: {point.Longitude.ToString(CultureInfo.InvariantCulture)}");
+			
+			HttpRequestMessage message = new HttpRequestMessage();
+			message.Method = HttpMethod.Get;
+			message.RequestUri = new Uri($"https://nominatim.openstreetmap.org/reverse?lat={point.Latitude.ToString(CultureInfo.InvariantCulture)}&lon={point.Longitude.ToString(CultureInfo.InvariantCulture)}&format=geojson");
+
+			using HttpClient client = new HttpClient();
+			client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36");
+			HttpResponseMessage response = await client.SendAsync(message, stoppingToken);
+
+			if (response.StatusCode != HttpStatusCode.OK) {
+				this._logger.LogError(await response.Content.ReadAsStringAsync(stoppingToken));
+				return null;
+			}
+
+			return await response.Content.ReadAsStringAsync(stoppingToken);
+
+			/*HttpWebRequest request = WebRequest.CreateHttp($"https://nominatim.openstreetmap.org/reverse?lat={point.Latitude}&lon={point.Longitude}&format=geojson");
 			request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36";
 		
 			HttpWebResponse? response = await request.GetResponseAsync() as HttpWebResponse;
@@ -70,7 +89,7 @@ public class ReverseGeocodingBackgroundService : BackgroundService {
 			if (response is null || response.StatusCode != HttpStatusCode.OK)
 				return null;
 			
-			return await new StreamReader(response.GetResponseStream()).ReadToEndAsync();
+			return await new StreamReader(response.GetResponseStream()).ReadToEndAsync();*/
 			// just return the response data containing all the address information in a geojson string.
 			// Is not worth parsing because its only used in the frontend and js can parse is automatically.  
 		}

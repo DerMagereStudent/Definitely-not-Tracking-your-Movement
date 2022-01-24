@@ -31,7 +31,6 @@ public static class Program {
 		// Add services to the container.
 		builder.Services.AddControllers();
 		
-		Program.ConfigureCors(builder);
 		Program.ConfigureOptions(builder, out JwtIssuingOptions jwtIssuingOptions);
 		Program.ConfigureScopedServices(builder);
 		builder.Services.AddHostedService<ReverseGeocodingBackgroundService>();
@@ -76,9 +75,7 @@ public static class Program {
 			app.UseSwaggerUI();
 		}
 
-		app.UseHttpsRedirection();
-
-		app.UseCors("AllowAll");
+		//app.UseHttpsRedirection();
 
 		app.UseAuthentication();
 		app.UseAuthorization();
@@ -87,19 +84,6 @@ public static class Program {
 	}
 
 	#region Services
-
-	private static void ConfigureCors(WebApplicationBuilder builder) {
-		builder.Services.AddCors(options => {
-			options.AddPolicy(
-				name: "AllowAll",
-				builder => {
-					builder.WithOrigins("*")
-						.AllowAnyHeader()
-						.AllowAnyMethod();
-				}
-			);
-		});
-	}
 
 	private static void ConfigureOptions(WebApplicationBuilder builder, out JwtIssuingOptions jwtIssuingOptions) {
 		jwtIssuingOptions = new JwtIssuingOptions();
