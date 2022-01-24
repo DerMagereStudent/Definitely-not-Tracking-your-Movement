@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.LoginTabFragment">
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:id="@+id/edit_text_login_username_email"
+        android:inputType="textEmailAddress"
+        android:hint="Username or email address"
+        app:layout_constraintWidth_percent=".8"
+        app:layout_constraintHorizontal_bias=".5"
+        app:layout_constraintVertical_bias=".1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/edit_text_login_password"
+        android:inputType="textPassword"
+        android:hint="Password"
+        app:layout_constraintWidth_percent=".8"
+        app:layout_constraintHorizontal_bias=".5"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_login_username_email" />
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/button_login"
+        android:background="@drawable/button_accent_bg"
+        android:text="Login"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintWidth_percent=".8"
+        app:layout_constraintHorizontal_bias=".5"
+        app:layout_constraintVertical_bias=".3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_login_password"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

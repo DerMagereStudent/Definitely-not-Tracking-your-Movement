@@ -8,8 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="colorPrimary">#181822</color>
-    <color name="colorPrimaryDark">#1e1e28</color>
+    <color name="colorPrimary">#20202a</color>
+    <color name="colorPrimaryDark">#181822</color>
     <color name="colorAccent">#24e8a6</color>
     <color name="textColorPrimary">@android:color/white</color>
     <color name="textColorPrimaryDark">@android:color/darker_gray</color>
