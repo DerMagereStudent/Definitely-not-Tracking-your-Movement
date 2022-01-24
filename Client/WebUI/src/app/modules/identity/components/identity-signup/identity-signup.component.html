@@ -1,0 +1,27 @@
+<form [formGroup]="formModel" #form='ngForm' autocomplete="off" (submit)="onSubmit()">
+  <h2>Sign Up</h2>
+  <div class="form-group required">
+    <input class="form-control my-3" formControlName="username" placeholder="Username">
+    <label class="text-danger" *ngIf="formModel.get('username')?.touched && formModel.get('username')?.errors?.['required']">This field is mandatory.</label>
+  </div>
+  <div class="form-group required">
+    <input class="form-control my-3" formControlName="email" placeholder="Email">
+    <label class="text-danger" *ngIf="formModel.get('email')?.touched && formModel.get('email')?.errors?.['required']">This field is mandatory.</label>
+    <label class="text-danger" *ngIf="formModel.get('email')?.touched && formModel.get('email')?.errors?.['email']">Invalid email address.</label>
+  </div>
+  <div formGroupName="passwords">
+    <div class="form-group required">
+      <input type="password" class="form-control my-3" formControlName="password" placeholder="Password">
+      <label class="text-danger" *ngIf="formModel.get('passwords.password')?.touched && formModel.get('passwords.password')?.errors?.['required']">This field is mandatory.</label>
+      <label class="text-danger" *ngIf="formModel.get('passwords.password')?.touched && formModel.get('passwords.password')?.errors?.['minlength']">Minimum 6 characters required.</label>
+      <label class="text-danger" *ngIf="formModel.get('passwords.password')?.touched && formModel.get('passwords.password')?.errors?.['pattern']">Minimum one uppercase, one lowercase, one number and one non alphanumeric character</label>
+    </div>
+    <div class="form-group required">
+      <input type="password" class="form-control my-3" formControlName="confirmPassword"  placeholder="Confirm Password">
+      <label class="text-danger" *ngIf="formModel.get('passwords.confirmPassword')?.touched && formModel.get('passwords.confirmPassword')?.errors?.['required']">This field is mandatory.</label>
+      <label class="text-danger" *ngIf="formModel.get('passwords.confirmPassword')?.touched && formModel.get('passwords.confirmPassword')?.errors?.['passwordMismatch']">Confirm Password does not match.</label>
+    </div>
+  </div>
+  <input class="btn btn-primary" type="submit" value="Sign Up" [disabled]="!formModel.valid"/>
+  <p class="m-0">Already have an account? <a href="" routerLink="/identity/login">Login</a></p>
+</form>

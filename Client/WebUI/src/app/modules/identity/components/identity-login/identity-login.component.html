@@ -1,0 +1,11 @@
+<form #form='ngForm' class="dms-form" autocomplete="off" (submit)="onSubmit()">
+  <h2>Login</h2>
+  <div class="form-group">
+    <input class="form-control my-3" #UserName="ngModel" name="UsernameEmail" placeholder="Username or Email" [(ngModel)]="formModel.usernameEmail" required>
+  </div>
+  <div class="form-group">
+    <input type="password" class="form-control my-3" #Password="ngModel" name="Password" placeholder="Password" [(ngModel)]="formModel.password" required>
+  </div>
+  <input class="btn btn-primary" type="submit" value="Login" [disabled]="form.invalid"/>
+  <p class="m-0">Don't have an account? <a href="" routerLink="/identity/signup">Sign Up</a></p>
+</form>

@@ -77,6 +77,8 @@ public static class Program {
 
 		//app.UseHttpsRedirection();
 
+		app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
 		app.UseAuthentication();
 		app.UseAuthorization();
 
