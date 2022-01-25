@@ -43,16 +43,20 @@ class LoginTabFragment : Fragment() {
                     val response = RetrofitInstance.api.sendLoginRequest(LoginRequest(usernameEmail, password))
 
                     if (response.isSuccessful) {
-                        MainActivity.instance.sharedPreferences.edit()
-                            .putString(ApplicationConstants.authTokenPreferenceKey, "Bearer " + response.body()?.token)
-                            .apply()
+                        if (response.body()!!.succeeded) {
+                            MainActivity.instance.sharedPreferences.edit()
+                                .putString(ApplicationConstants.authTokenPreferenceKey, "Bearer " + response.body()?.token)
+                                .apply()
 
-                        MainActivity.instance.notifyPreferencesChanged()
+                            MainActivity.instance.notifyPreferencesChanged()
+                        } else {
+                            CoroutineScope(Dispatchers.Main).launch { Toast.makeText(view.context, "${response.body()!!.errors.first().code} - ${response.body()!!.errors.first().description}", Toast.LENGTH_LONG).show() }
+                        }
                     } else {
-                        Toast.makeText(view.context, "Login up error", Toast.LENGTH_LONG).show()
+                        CoroutineScope(Dispatchers.Main).launch { Toast.makeText(view.context, "Login up error", Toast.LENGTH_LONG).show() }
                     }
                 } catch (e: Exception) {
-                    Toast.makeText(view.context, "Login up error: " + e.message, Toast.LENGTH_LONG).show()
+                    CoroutineScope(Dispatchers.Main).launch { Toast.makeText(view.context, "Login up error: " + e.message, Toast.LENGTH_LONG).show() }
                 }
             }
         }

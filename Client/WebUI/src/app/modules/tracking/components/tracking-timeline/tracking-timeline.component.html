@@ -1,3 +1,18 @@
-<p>
-  tracking-timeline works!
-</p>
+<div class="container mt-5 p-5 w-100" [style.display]="timelineEntities.length > 0 ? 'block' : 'none'">
+    <div class="row d-md-flex justify-content-center">
+        <h1 class='text-center'>Timeline</h1>
+    </div>
+</div>
+<div class="container my-5 p-5 w-100" [style.display]="timelineEntities.length > 0 ? 'block' : 'none'">
+    <div class="row timeline d-md-flex justify-content-center">
+        <ul class="col col-md-10">
+            <li class="card" *ngFor="let entity of timelineEntities">
+                <div class="timeline-content">
+                <h3 class="date">{{ entity.date }}</h3>
+                <h1>{{ entity.header }}</h1>
+                <p>{{ entity.content }}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

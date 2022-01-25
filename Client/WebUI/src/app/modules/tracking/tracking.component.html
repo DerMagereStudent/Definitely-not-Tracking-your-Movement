@@ -1,2 +1,5 @@
-<app-tracking-map></app-tracking-map>
-<app-tracking-timeline></app-tracking-timeline>
+<app-tracking-map [trackingPoints]="trackingPoints"></app-tracking-map>
+<app-tracking-timeline [trackingPoints]="trackingPoints"></app-tracking-timeline>
+<div class="container p-5 d-flex justify-content-center">
+    <button class="btn btn-primary" (click)="onClick()">Logout</button>
+</div>

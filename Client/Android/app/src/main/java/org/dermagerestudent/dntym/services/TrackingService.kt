@@ -128,7 +128,10 @@ class TrackingService : Service() {
                         )
                     )
 
-                    this@TrackingService.updateNotificationText("${location.latitude}, ${location.longitude}")
+                    if (response.isSuccessful && response.body()!!.succeeded)
+                        this@TrackingService.updateNotificationText("${location.latitude}, ${location.longitude}")
+                    else
+                        this@TrackingService.updateNotificationText("error ${Date().time}")
                 } catch (e: Exception) {
                     Log.e("TrackingService", e.message!!)
                 }
@@ -156,11 +159,6 @@ class TrackingService : Service() {
     }
 
     private suspend fun getLocationTask(): Task<Location>? {
-        val locationRequest: LocationRequest = LocationRequest()
-        locationRequest.interval = 1000
-        locationRequest.fastestInterval = 1000
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling

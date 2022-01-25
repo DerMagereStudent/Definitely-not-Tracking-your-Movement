@@ -43,9 +43,6 @@ export class IdentitySignupComponent implements OnInit {
       });
     } else {
       response.errors.forEach((error: any) => {
-        console.log(error);
-        console.log(this.toastrService);
-
         this.toastrService.error(error.description, error.code);
       });
     }

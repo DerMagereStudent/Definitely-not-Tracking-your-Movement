@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 using System.Net;
 
 using DNTYD.Core.Entities;
@@ -30,8 +31,11 @@ public class ReverseGeocodingBackgroundService : BackgroundService {
 	}
 
 	private async Task RunAddressResolvingLoop(CancellationToken stoppingToken) {
+		Stopwatch stopwatch = new Stopwatch();
 		while (!stoppingToken.IsCancellationRequested) {
-			await Task.Delay(ReverseGeocodingBackgroundService.NominatimApiRequestBreak, stoppingToken);
+			stopwatch.Stop();
+			await Task.Delay((int)Math.Max(0, ReverseGeocodingBackgroundService.NominatimApiRequestBreak - stopwatch.ElapsedMilliseconds), stoppingToken);
+			stopwatch.Restart();
 			
 			TrackingPointModel? point = await this.GetNextPendingTrackingPoint(stoppingToken);
 
@@ -63,8 +67,8 @@ public class ReverseGeocodingBackgroundService : BackgroundService {
 
 	private async Task<string?> GetAddressForTrackingPoint(TrackingPoint point, CancellationToken stoppingToken) {
 		try {
-			this._logger.LogInformation($"Latitude:  {point.Latitude.ToString(CultureInfo.InvariantCulture)}");
-			this._logger.LogInformation($"Longitude: {point.Longitude.ToString(CultureInfo.InvariantCulture)}");
+			/*this._logger.LogInformation($"Latitude:  {point.Latitude.ToString(CultureInfo.InvariantCulture)}");
+			this._logger.LogInformation($"Longitude: {point.Longitude.ToString(CultureInfo.InvariantCulture)}");*/
 			
 			HttpRequestMessage message = new HttpRequestMessage();
 			message.Method = HttpMethod.Get;

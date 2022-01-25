@@ -44,12 +44,16 @@ class SignUpTabFragment : Fragment() {
                 try {
                     val response = RetrofitInstance.api.sendSignUpRequest(SignUpRequest(username, email, password))
 
-                    if (response.isSuccessful)
-                        Toast.makeText(view.context, "Sign up", Toast.LENGTH_LONG).show()
-                    else
-                        Toast.makeText(view.context, "Sign up error", Toast.LENGTH_LONG).show()
+                    if (response.isSuccessful) {
+                        if (response.body()!!.succeeded)
+                            CoroutineScope(Dispatchers.Main).launch { Toast.makeText(view.context, "Sign up", Toast.LENGTH_LONG).show() }
+                        else
+                            CoroutineScope(Dispatchers.Main).launch { Toast.makeText(view.context, "${response.body()!!.errors.first().code} - ${response.body()!!.errors.first().description}", Toast.LENGTH_LONG).show() }
+                    } else {
+                        CoroutineScope(Dispatchers.Main).launch { Toast.makeText(view.context, "Sign up error", Toast.LENGTH_LONG).show() }
+                    }
                 } catch (e: Exception) {
-                    Toast.makeText(view.context, "Sign up error: " + e.message, Toast.LENGTH_LONG).show()
+                    CoroutineScope(Dispatchers.Main).launch { Toast.makeText(view.context, "Sign up error: " + e.message, Toast.LENGTH_LONG).show() }
                 }
             }
         }
